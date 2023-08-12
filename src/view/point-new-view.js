@@ -1,4 +1,4 @@
-import { createElement } from "../render.js";
+import { createElement } from '../render.js';
 
 function createNewPointMarkup() {
   return `<li class="trip-events__item">

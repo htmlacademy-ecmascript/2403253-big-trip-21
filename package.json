@@ -16,8 +16,8 @@
     "lint": "eslint src/"
   },
   "devDependencies": {
-    "eslint": "8.38.0",
-    "eslint-config-htmlacademy": "9.0.0"
+    "eslint": "^8.38.0",
+    "eslint-config-htmlacademy": "^9.0.0"
   },
   "engines": {
     "node": "18"

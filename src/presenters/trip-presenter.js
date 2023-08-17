@@ -1,9 +1,9 @@
 import SortView from '../view/sort-view';
 import PointView from '../view/point-view';
-import PointNewView from '../view/point-new-view';
 import PointEditView from '../view/point-edit-view';
 import ListView from '../view/list-view';
 import { render } from '../render.js';
+//import PointNewView from '../view/point-new-view';
 
 export default class TripEventsPresenter {
   tripSortComponent = new SortView();

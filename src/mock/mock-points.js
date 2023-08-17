@@ -1,7 +1,4 @@
-import { getRandomDescriptionPhotos, getBoolean,
-        generateRandomInteger, getRandomArrayElement,
-        getRandomDescriptionSentences,
-        generateRandomDate } from '../util'
+import { getRandomDescriptionPhotos, getBoolean, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate } from '../util';
 
 
 const destinations = [
@@ -48,7 +45,7 @@ const PointTypes = {
     name: 'Flight',
     icon : './img/icons/flight.png'
   }
-}
+};
 
 const offers = {
   [PointTypes.Taxi.name]: [

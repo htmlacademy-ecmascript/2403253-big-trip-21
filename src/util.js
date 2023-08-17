@@ -97,7 +97,4 @@ function generateRandomDate(startYear, endYear) {
   ];
 }
 
-export{getBoolean, getRandomDescriptionPhotos,
-      generateRandomInteger, getRandomArrayElement,
-      getRandomDescriptionSentences, generateRandomDate,
-      getTimeDifference, GoodPointDate};
+export{getBoolean, getRandomDescriptionPhotos, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate, getTimeDifference, GoodPointDate};

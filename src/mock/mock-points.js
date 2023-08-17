@@ -119,7 +119,7 @@ const offers = {
 
 function generateRandomWayPoint() {
   const randomPointType = getRandomArrayElement(Object.values(PointTypes));
-  const [firstDate, secondDate] = generateRandomDate();
+  const [firstDate, secondDate] = generateRandomDate(2022, 2035);
 
   return ({
     type: randomPointType,

@@ -29,6 +29,10 @@ function getRandomDescriptionPhotos() {
   return photosArray;
 }
 
+function GoodPointDate(date, format) {
+  return date ? dayjs(date).format(format) : '';
+}
+
 function generateRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -45,6 +49,10 @@ function getRandomDescriptionSentences(){
   }
 
   return description;
+}
+
+function leadZero(time) {
+  return time.toString().padStart(2, '0');
 }
 
 function getTimeDifference(endTime, startTime) {
@@ -66,8 +74,8 @@ function getTimeDifference(endTime, startTime) {
 }
 
 function generateRandomDate(startYear, endYear) {
-  let startYear = startYear;
-  let endYear = endYear;
+  //const startYear = startYear;
+  //const endYear = endYear;
 
   const year = generateRandomInteger(startYear, endYear);
 
@@ -91,4 +99,5 @@ function generateRandomDate(startYear, endYear) {
 
 export{getBoolean, getRandomDescriptionPhotos,
       generateRandomInteger, getRandomArrayElement,
-      getRandomDescriptionSentences, generateRandomDate};
+      getRandomDescriptionSentences, generateRandomDate,
+      getTimeDifference, GoodPointDate};

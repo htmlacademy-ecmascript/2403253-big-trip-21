@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { GoodPointDate, getTimeDifference} from '../util.js';
+import { goodPointDate, getTimeDifference} from '../util.js';
 
 const POINT_DATE_FORMAT = 'MMM D';
 const POINT_TIME_FORMAT = 'HH:mm';
@@ -19,14 +19,14 @@ function createPointMarkup(point) {
 
   const {dates, type, cost, offers, destination, isFavorite} = point;
 
-  const date = GoodPointDate(dates.start, POINT_DATE_FORMAT);
-  const dateFirstTime = GoodPointDate(dates.start, POINT_TIME_FORMAT);
-  const dateSecondTime = GoodPointDate(dates.end, POINT_TIME_FORMAT);
+  const date = goodPointDate(dates.start, POINT_DATE_FORMAT);
+  const dateFirstTime = goodPointDate(dates.start, POINT_TIME_FORMAT);
+  const dateSecondTime = goodPointDate(dates.end, POINT_TIME_FORMAT);
   const timeDifference = getTimeDifference(dates.end, dates.start);
 
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="2019-03-18">${date}</time>
+      <time class="event__date" datetime="${date}">${date}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="${type.icon}" alt="Event type icon">
       </div>

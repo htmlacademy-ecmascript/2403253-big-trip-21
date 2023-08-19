@@ -1,4 +1,4 @@
-import { getRandomDescriptionPhotos, getBoolean, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate } from '../util';
+import { getRandomDescriptionPhotos, getRandomBoolean, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate } from '../util';
 
 
 const destinations = [
@@ -52,12 +52,12 @@ const offers = {
     {
       name: 'Transfer',
       cost: 70,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     },
     {
       name: 'Meet in Airport and loading luggage',
       cost: 100,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     }
   ],
 
@@ -65,7 +65,7 @@ const offers = {
     {
       name: 'Switch to comfort',
       cost: 80,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     }
   ],
 
@@ -73,12 +73,12 @@ const offers = {
     {
       name: 'Switch to coupe',
       cost: 50,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     },
     {
       name: 'Switch to luxe',
       cost: 80,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     }
   ],
 
@@ -86,12 +86,12 @@ const offers = {
     {
       name: 'Restaurant Entrance',
       cost: 200,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     },
     {
       name: 'Massage Treatments',
       cost: 250,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     },
     {
       name: 'become a captain',
@@ -104,12 +104,12 @@ const offers = {
     {
       name: 'additional meals',
       cost: 100,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     },
     {
       name: 'Switch to business',
       cost: 250,
-      checked: getBoolean()
+      checked: getRandomBoolean()
     }
   ],
 };
@@ -127,7 +127,7 @@ function generateRandomWayPoint() {
     },
     offers: offers[randomPointType.name],
     cost: generateRandomInteger(10, 1000),
-    isFavorite: getBoolean()
+    isFavorite: getRandomBoolean()
   });
 }
 

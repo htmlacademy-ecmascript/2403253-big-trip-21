@@ -15,7 +15,7 @@ const DESTINATION_DESCRIPTIONS = [
   'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. ',
   'In rutrum ac purus sit amet tempus. '];
 
-function getBoolean(){
+function getRandomBoolean(){
   return Boolean(generateRandomInteger(0, 1));
 }
 
@@ -29,7 +29,7 @@ function getRandomDescriptionPhotos() {
   return photosArray;
 }
 
-function GoodPointDate(date, format) {
+function goodPointDate(date, format) {
   return date ? dayjs(date).format(format) : '';
 }
 
@@ -43,8 +43,8 @@ function getRandomArrayElement(array) {
 
 function getRandomDescriptionSentences(){
   let description = '';
-  const sentecesCount = generateRandomInteger(1, 5);
-  for(let i = 0; i < sentecesCount; i++){
+  const sentencesCount = generateRandomInteger(1, 5);
+  for(let i = 0; i < sentencesCount; i++){
     description += getRandomArrayElement(DESTINATION_DESCRIPTIONS);
   }
 
@@ -97,4 +97,4 @@ function generateRandomDate(startYear, endYear) {
   ];
 }
 
-export{getBoolean, getRandomDescriptionPhotos, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate, getTimeDifference, GoodPointDate};
+export{getRandomBoolean, getRandomDescriptionPhotos, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate, getTimeDifference, goodPointDate};

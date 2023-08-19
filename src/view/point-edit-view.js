@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { GoodPointDate } from '../util.js';
+import { goodPointDate } from '../util.js';
 
 const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
 
@@ -26,8 +26,8 @@ function createEventOfferSelectorTemplate(offers) {
 
 function createPointEditMarkup(point) {
   const {dates, type, cost, offers, destination} = point;
-  const startDate = GoodPointDate(dates.start, POINT_EDIT_DATE_FORMAT);
-  const endDate = GoodPointDate(dates.end, POINT_EDIT_DATE_FORMAT);
+  const startDate = goodPointDate(dates.start, POINT_EDIT_DATE_FORMAT);
+  const endDate = goodPointDate(dates.end, POINT_EDIT_DATE_FORMAT);
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">

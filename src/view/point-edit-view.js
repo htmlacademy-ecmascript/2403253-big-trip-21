@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { goodPointDate } from '../util.js';
 
 const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
@@ -140,24 +140,15 @@ function createPointEditMarkup(point) {
   </li>`;
 }
 
-export default class PointEditView {
+export default class PointEditView extends AbstractView {
+  #point = null;
   constructor(point){
-    this.point = point;
+    super();
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createPointEditMarkup(this.point);
+  get template() {
+    return createPointEditMarkup(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }

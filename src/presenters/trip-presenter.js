@@ -5,13 +5,13 @@ import ListView from '../view/list-view';
 import { render, replace } from '../framework/render';
 
 export default class TripEventsPresenter {
-  #tripEventsContainer = null
-  #pointModel = null
+  #tripEventsContainer = null;
+  #pointModel = null;
 
   #tripSortComponent = new SortView();
   #tripEventsComponent = new ListView();
 
-  #boardPoints = []
+  #boardPoints = [];
   constructor({ tripEventsContainer, pointModel }) {
     this.#tripEventsContainer = tripEventsContainer;
     this.#pointModel = pointModel;
@@ -22,7 +22,7 @@ export default class TripEventsPresenter {
 
     render(this.#tripSortComponent, this.#tripEventsContainer);
     render(this.#tripEventsComponent, this.#tripEventsContainer);
-   // render(new PointEditView(this.#boardPoints[0]), this.#tripEventsComponent.element);
+    // render(new PointEditView(this.#boardPoints[0]), this.#tripEventsComponent.element);
 
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i]);
@@ -62,4 +62,4 @@ export default class TripEventsPresenter {
 
     render(pointComponent, this.#tripEventsComponent.element);
   }
-};
+}

@@ -3,8 +3,8 @@ import TripInfoView from '../view/trip-info-view';
 import { render } from '../framework/render';
 
 export default class HeaderPresenter {
-  #tripInfoContainer = null
-  #tripFilterContainer = null
+  #tripInfoContainer = null;
+  #tripFilterContainer = null;
 
   #tripFilterComponent = new TripFilterView();
   #tripInfoComponent = new TripInfoView();

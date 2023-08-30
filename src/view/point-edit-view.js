@@ -157,8 +157,8 @@ export default class PointEditView extends AbstractView {
     return createPointEditMarkup(this.#point);
   }
 
-  formSubmitHandler=(evt)=>{
+  formSubmitHandler = (evt) =>{
     evt.preventDefault();
     this.#handleFormSubmit();
-  }
+  };
 }

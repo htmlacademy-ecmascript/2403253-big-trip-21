@@ -68,7 +68,7 @@ export default class PointView extends AbstractView {
     this.#point = point;
     this.#handleArrowClick = onArrowClick;
     this.element.querySelector('.event__rollup-btn')
-    .addEventListener('click', this.#arrowClickHandler);
+      .addEventListener('click', this.#arrowClickHandler);
   }
 
   get template() {
@@ -78,5 +78,5 @@ export default class PointView extends AbstractView {
   #arrowClickHandler = (evt) =>{
     evt.preventDefault();
     this.#handleArrowClick();
-  }
+  };
 }

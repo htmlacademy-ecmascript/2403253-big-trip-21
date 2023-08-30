@@ -142,13 +142,23 @@ function createPointEditMarkup(point) {
 
 export default class PointEditView extends AbstractView {
   #point = null;
-  constructor(point){
+  #handleFormSubmit = null;
+
+  constructor({point, onFormSubmit}){
     super();
     this.#point = point;
+    this.#handleFormSubmit = onFormSubmit;
+
+    this.element.querySelector('form')
+      .addEventListener('submit', this.formSubmitHandler);
   }
 
   get template() {
     return createPointEditMarkup(this.#point);
   }
 
+  formSubmitHandler=(evt)=>{
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  }
 }

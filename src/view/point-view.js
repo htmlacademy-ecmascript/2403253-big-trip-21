@@ -61,13 +61,22 @@ function createPointMarkup(point) {
 
 export default class PointView extends AbstractView {
   #point = null;
-  constructor(point){
+  #handleArrowClick = null;
+
+  constructor({point, onArrowClick}){
     super();
     this.#point = point;
+    this.#handleArrowClick = onArrowClick;
+    this.element.querySelector('.event__rollup-btn')
+    .addEventListener('click', this.#arrowClickHandler);
   }
 
   get template() {
     return createPointMarkup(this.#point);
   }
 
+  #arrowClickHandler = (evt) =>{
+    evt.preventDefault();
+    this.#handleArrowClick();
+  }
 }

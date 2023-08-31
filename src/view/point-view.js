@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { goodPointDate, getTimeDifference} from '../util.js';
 
 const POINT_DATE_FORMAT = 'MMM D';
@@ -59,24 +59,24 @@ function createPointMarkup(point) {
   </li>`;
 }
 
-export default class PointView {
-  constructor(point){
-    this.point = point;
+export default class PointView extends AbstractView {
+  #point = null;
+  #handleArrowClick = null;
+
+  constructor({point, onArrowClick}){
+    super();
+    this.#point = point;
+    this.#handleArrowClick = onArrowClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#arrowClickHandler);
   }
 
-  getTemplate() {
-    return createPointMarkup(this.point);
+  get template() {
+    return createPointMarkup(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #arrowClickHandler = (evt) =>{
+    evt.preventDefault();
+    this.#handleArrowClick();
+  };
 }

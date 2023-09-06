@@ -97,4 +97,21 @@ function generateRandomDate(startYear, endYear) {
   ];
 }
 
-export{getRandomBoolean, getRandomDescriptionPhotos, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate, getTimeDifference, goodPointDate};
+function isPointExpired(dueDate) {
+  return dueDate && dayjs().isAfter(dueDate, 'D');
+}
+
+function isPointFuture(dueDate){
+  return dueDate && dayjs().isBefore(dueDate, 'D')
+}
+
+function isPointRepeating(repeating) {
+  return Object.values(repeating).some(Boolean);
+}
+
+function isPointExpiringToday(dueDate) {
+  return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+}
+
+
+export{isPointFuture, isPointExpired, isPointRepeating, isPointExpiringToday, getRandomBoolean, getRandomDescriptionPhotos, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate, getTimeDifference, goodPointDate};

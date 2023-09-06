@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { goodPointDate } from '../util.js';
+import { goodPointDate } from '../utils/util.js';
 
 const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
 

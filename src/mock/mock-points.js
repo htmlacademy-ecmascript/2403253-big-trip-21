@@ -1,4 +1,4 @@
-import { getRandomDescriptionPhotos, getRandomBoolean, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate } from '../util';
+import { getRandomDescriptionPhotos, getRandomBoolean, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate } from '../utils/util';
 
 
 const destinations = [

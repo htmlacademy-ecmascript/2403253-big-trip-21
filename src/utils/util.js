@@ -102,7 +102,7 @@ function isPointExpired(dueDate) {
 }
 
 function isPointFuture(dueDate){
-  return dueDate && dayjs().isBefore(dueDate, 'D')
+  return dueDate && dayjs().isBefore(dueDate, 'D');
 }
 
 function isPointRepeating(repeating) {

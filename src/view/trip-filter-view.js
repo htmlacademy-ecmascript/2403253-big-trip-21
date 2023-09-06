@@ -20,8 +20,8 @@ function createFilterItemMarkup(filter, isChecked) {
 
 function createFilterMarkup(filterItems) {
   const filterItemsTemplate = filterItems
-  .map((filter, index) => createFilterItemMarkup(filter, index === 0))
-  .join('');
+    .map((filter, index) => createFilterItemMarkup(filter, index === 0))
+    .join('');
 
   return `<form class="trip-filters" action="#" method="get">
   ${filterItemsTemplate}
@@ -36,6 +36,7 @@ export default class TripFilterView extends AbstractView {
     super();
     this.#filters = filters;
   }
+
   get template() {
     return createFilterMarkup(this.#filters);
   }

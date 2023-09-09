@@ -62,8 +62,9 @@ export default class TripEventsPresenter {
     render(this.#tripEventsComponent, this.#tripEventsContainer);
     // render(new PointEditView(this.#boardPoints[0]), this.#tripEventsComponent.element);
 
-    for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
-    }
+    this.#boardPoints.forEach((point) => {
+      this.#renderPoint(point);
+    });
+
   }
 }

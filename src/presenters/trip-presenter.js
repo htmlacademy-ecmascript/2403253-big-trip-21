@@ -19,14 +19,7 @@ export default class TripEventsPresenter {
 
   init() {
     this.#boardPoints = [...this.#pointModel.Points];
-
-    render(this.#tripSortComponent, this.#tripEventsContainer);
-    render(this.#tripEventsComponent, this.#tripEventsContainer);
-    // render(new PointEditView(this.#boardPoints[0]), this.#tripEventsComponent.element);
-
-    for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
-    }
+    this.#pointsRender();
   }
 
   #renderPoint(point) {
@@ -61,5 +54,17 @@ export default class TripEventsPresenter {
     }
 
     render(pointComponent, this.#tripEventsComponent.element);
+  }
+
+  #pointsRender(){
+
+    render(this.#tripSortComponent, this.#tripEventsContainer);
+    render(this.#tripEventsComponent, this.#tripEventsContainer);
+    // render(new PointEditView(this.#boardPoints[0]), this.#tripEventsComponent.element);
+
+    this.#boardPoints.forEach((point) => {
+      this.#renderPoint(point);
+    });
+
   }
 }

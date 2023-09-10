@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { goodPointDate, getTimeDifference} from '../util.js';
+import { goodPointDate, getTimeDifference} from '../utils/util.js';
 
 const POINT_DATE_FORMAT = 'MMM D';
 const POINT_TIME_FORMAT = 'HH:mm';

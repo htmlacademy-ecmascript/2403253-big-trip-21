@@ -3,7 +3,7 @@ import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
 
-const DESTINATION_DESCRIPTIONS = [
+export const DESTINATION_DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
   'Cras aliquet varius magna, non porta ligula feugiat eget. ',
   'Fusce tristique felis at fermentum pharetra. ',
@@ -15,11 +15,11 @@ const DESTINATION_DESCRIPTIONS = [
   'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. ',
   'In rutrum ac purus sit amet tempus. '];
 
-function getRandomBoolean(){
+export function getRandomBoolean(){
   return Boolean(generateRandomInteger(0, 1));
 }
 
-function getRandomDescriptionPhotos() {
+export function getRandomDescriptionPhotos() {
   const photosArray = [];
   const photosCount = generateRandomInteger(1, 4);
   for(let i = 0; i < photosCount; i++){
@@ -29,19 +29,19 @@ function getRandomDescriptionPhotos() {
   return photosArray;
 }
 
-function goodPointDate(date, format) {
+export function goodPointDate(date, format) {
   return date ? dayjs(date).format(format) : '';
 }
 
-function generateRandomInteger(min, max) {
+export function generateRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getRandomArrayElement(array) {
+export function getRandomArrayElement(array) {
   return array[generateRandomInteger(0, array.length - 1)];
 }
 
-function getRandomDescriptionSentences(){
+export function getRandomDescriptionSentences(){
   let description = '';
   const sentencesCount = generateRandomInteger(1, 5);
   for(let i = 0; i < sentencesCount; i++){
@@ -55,7 +55,7 @@ function leadZero(time) {
   return time.toString().padStart(2, '0');
 }
 
-function getTimeDifference(endTime, startTime) {
+export function getTimeDifference(endTime, startTime) {
   const start = dayjs(startTime);
   const end = dayjs(endTime);
   const timeDifference = dayjs.duration(end.diff(start));
@@ -73,7 +73,7 @@ function getTimeDifference(endTime, startTime) {
 
 }
 
-function generateRandomDate(startYear, endYear) {
+export function generateRandomDate(startYear, endYear) {
   //const startYear = startYear;
   //const endYear = endYear;
 
@@ -97,4 +97,20 @@ function generateRandomDate(startYear, endYear) {
   ];
 }
 
-export{getRandomBoolean, getRandomDescriptionPhotos, generateRandomInteger, getRandomArrayElement, getRandomDescriptionSentences, generateRandomDate, getTimeDifference, goodPointDate};
+export function isPointExpired(dueDate) {
+  return dueDate && dayjs().isAfter(dueDate, 'D');
+}
+
+export function isPointFuture(dueDate){
+  return dueDate && dayjs().isBefore(dueDate, 'D');
+}
+
+export function isPointRepeating(repeating) {
+  return Object.values(repeating).some(Boolean);
+}
+
+export function isPointExpiringToday(dueDate) {
+  return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+}
+
+

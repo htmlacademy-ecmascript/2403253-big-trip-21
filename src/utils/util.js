@@ -112,5 +112,3 @@ export function isPointRepeating(repeating) {
 export function isPointExpiringToday(dueDate) {
   return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
 }
-
-

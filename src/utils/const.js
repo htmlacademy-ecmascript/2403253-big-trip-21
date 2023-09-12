@@ -4,4 +4,5 @@ const FilterType = {
   PRESENT: 'present',
   PAST: 'past'
 };
+
 export {FilterType};

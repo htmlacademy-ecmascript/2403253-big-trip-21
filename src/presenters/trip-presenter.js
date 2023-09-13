@@ -3,6 +3,7 @@ import PointView from '../view/point-view';
 import PointEditView from '../view/point-edit-view';
 import ListView from '../view/list-view';
 import NoPointView from '../view/no-point-view';
+import BoardPointPresenter from './board-point-presenter';
 
 import {RenderPosition, render, replace} from '../framework/render';
 
@@ -54,36 +55,10 @@ export default class TripEventsPresenter {
   }
 
   #renderPoint(point) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-    const pointComponent = new PointView({
-      point,
-      onArrowClick: () => {
-        replaceCardToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
-    });
-    const pointEditComponent = new PointEditView({
-      point,
-      onFormSubmit: () => {
-        replaceFormToCard();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
+    const pointPresenter = new BoardPointPresenter({
+      pointListContainer: this.#tripEventsComponent.element,
     });
 
-    function replaceCardToForm() {
-      replace(pointEditComponent, pointComponent);
-    }
-
-    function replaceFormToCard() {
-      replace(pointComponent, pointEditComponent);
-    }
-
-    render(pointComponent, this.#tripEventsComponent.element);
+    pointPresenter.init(point);
   }
 }

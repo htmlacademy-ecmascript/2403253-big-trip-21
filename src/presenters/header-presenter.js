@@ -18,8 +18,13 @@ export default class HeaderPresenter {
   }
 
   init() {
-    render(this.#tripInfoComponent, this.#tripInfoContainer, 'afterbegin');
+    this.#renderTripInfo();
     this.#renderFilters();
+  }
+
+  #renderTripInfo(){
+    render(this.#tripInfoComponent, this.#tripInfoContainer, 'afterbegin');
+
   }
 
   #renderFilters(){

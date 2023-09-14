@@ -66,7 +66,7 @@ export default class PointView extends AbstractView {
 
   constructor({point, onArrowClick}){
     super();
-    console.log(onArrowClick)
+
     this.#point = point;
     this.#handleArrowClick = onArrowClick;
     this.element.querySelector('.event__rollup-btn')

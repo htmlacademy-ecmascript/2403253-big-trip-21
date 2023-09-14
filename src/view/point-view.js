@@ -62,15 +62,23 @@ function createPointMarkup(point) {
 export default class PointView extends AbstractView {
   #point = null;
   #handleArrowClick = null;
+  #handleFavoriteClick = null;
+  #handleArchiveClick = null;
 
-
-  constructor({point, onArrowClick}){
+  constructor({point, onArrowClick, onFavoriteClick, onArchiveClick}){
     super();
 
     this.#point = point;
     this.#handleArrowClick = onArrowClick;
+    this.#handleFavoriteClick = onFavoriteClick;
+    this.#handleArchiveClick = onArchiveClick;
+
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#arrowClickHandler);
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
+    // this.element.querySelector('.card__btn--archive')
+    //   .addEventListener('click', this.#archiveClickHandler);
   }
 
   get template() {
@@ -80,5 +88,15 @@ export default class PointView extends AbstractView {
   #arrowClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleArrowClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
+  };
+
+  #archiveClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleArchiveClick();
   };
 }

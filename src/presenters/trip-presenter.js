@@ -72,6 +72,7 @@ export default class TripEventsPresenter {
   #renderPoint(point) {
     const pointPresenter = new BoardPointPresenter({
       pointListContainer: this.#tripEventsComponent.element,
+      onDataChange: this.#handleTaskChange
     });
 
     pointPresenter.init(point);

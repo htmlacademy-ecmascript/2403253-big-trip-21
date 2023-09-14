@@ -5,14 +5,16 @@ import {render, replace, remove} from '../framework/render';
 
 export default class BoardPointPresenter{
   #pointListContainer = null;
+  #handleDataChange = null;
 
   #pointComponent = null;
   #pointEditComponent = null;
 
   #point = null;
 
-  constructor({pointListContainer}) {
+  constructor({pointListContainer, onDataChange}) {
     this.#pointListContainer = pointListContainer;
+    this.#handleDataChange = onDataChange;
   }
 
   init(point) {
@@ -24,7 +26,10 @@ export default class BoardPointPresenter{
     this.#pointComponent = new PointView({
       point: this.#point,
       onArrowClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick,
+      onArchiveClick: this.#handleArchiveClick
     });
+
     this.#pointEditComponent = new PointEditView({
       point: this.#point,
       onFormSubmit: this.#handleFormSubmit,
@@ -72,6 +77,14 @@ export default class BoardPointPresenter{
 
   #handleEditClick = () => {
     this.#replaceCardToForm();
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+  };
+
+  #handleArchiveClick = () => {
+    this.#handleDataChange({...this.#point, isArchive: !this.#point.isArchive});
   };
 
   #handleFormSubmit = () => {

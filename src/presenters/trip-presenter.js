@@ -1,11 +1,9 @@
 import SortView from '../view/sort-view';
-import PointView from '../view/point-view';
-import PointEditView from '../view/point-edit-view';
 import ListView from '../view/list-view';
 import NoPointView from '../view/no-point-view';
 import BoardPointPresenter from './board-point-presenter';
 
-import {RenderPosition, render, replace} from '../framework/render';
+import {RenderPosition, render} from '../framework/render';
 import { updateItem } from '../utils/util';
 
 export default class TripEventsPresenter {
@@ -28,8 +26,6 @@ export default class TripEventsPresenter {
     this.#boardPoints = [...this.#pointModel.Points];
     this.#allRender();
   }
-
-
 
   #allRender(){
 
@@ -56,7 +52,6 @@ export default class TripEventsPresenter {
   #renderNoTasks() {
     if (this.#boardPoints.every((point) => point.isArchive)) {
       render(this.#noPointComponent, this.#tripEventsComponent.element, RenderPosition.AFTERBEGIN);
-      return;
     }
   }
 
@@ -81,8 +76,6 @@ export default class TripEventsPresenter {
     });
 
     pointPresenter.init(point);
-    console.log(point.id)
     this.#pointPresenters.set(point.id, pointPresenter);
-    console.log(this.#pointPresenters)
   }
 }

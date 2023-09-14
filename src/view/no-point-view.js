@@ -10,7 +10,6 @@ const NoPointsTextType = {
 
 function createNoPointMarkup(filterType) {
   const noPointsTextValue = NoPointsTextType[filterType];
- console.log(filterType)
   return (
     `<p class="trip-events__msg">
       ${noPointsTextValue}

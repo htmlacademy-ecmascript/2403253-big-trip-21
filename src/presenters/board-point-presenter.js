@@ -58,14 +58,14 @@ export default class BoardPointPresenter{
 
     remove(prevPointComponent);
     remove(prevPointEditComponent);
-    }
+  }
 
-    destroy() {
+  destroy() {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
-   }
+  }
 
-   resetView() {
+  resetView() {
     if (this.#mode !== Mode.DEFAULT) {
       this.#replaceFormToCard();
     }

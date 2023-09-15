@@ -113,4 +113,6 @@ export function isPointExpiringToday(dueDate) {
   return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
 }
 
-
+export function updateItem(items, update){
+  return items.map((item) => item.id === update.id ? update : item);
+}

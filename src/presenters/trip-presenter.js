@@ -1,8 +1,10 @@
 import SortView from '../view/sort-view';
-import PointView from '../view/point-view';
-import PointEditView from '../view/point-edit-view';
 import ListView from '../view/list-view';
-import { render, replace } from '../framework/render';
+import NoPointView from '../view/no-point-view';
+import BoardPointPresenter from './board-point-presenter';
+
+import {RenderPosition, render} from '../framework/render';
+import { updateItem } from '../utils/util';
 
 export default class TripEventsPresenter {
   #tripEventsContainer = null;
@@ -10,8 +12,11 @@ export default class TripEventsPresenter {
 
   #tripSortComponent = new SortView();
   #tripEventsComponent = new ListView();
+  #noPointComponent = new NoPointView();
 
   #boardPoints = [];
+
+  #pointPresenters = new Map();
   constructor({ tripEventsContainer, pointModel }) {
     this.#tripEventsContainer = tripEventsContainer;
     this.#pointModel = pointModel;
@@ -19,52 +24,58 @@ export default class TripEventsPresenter {
 
   init() {
     this.#boardPoints = [...this.#pointModel.Points];
-    this.#pointsRender();
+    this.#allRender();
+  }
+
+  #allRender(){
+
+    this.#renderSort();
+    this.#renderBoardPoints();
+    this.#renderNoTasks();
+  }
+
+  #clearTaskList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+    //this.#renderedTaskCount = TASK_COUNT_PER_STEP;
+    //remove(this.#loadMoreButtonComponent);
+  }
+
+  #renderBoardPoints(){
+    render(this.#tripEventsComponent, this.#tripEventsContainer);
+    this.#boardPoints.forEach((point) => {
+      this.#renderPoint(point);
+
+    });
+  }
+
+  #renderNoTasks() {
+    if (this.#boardPoints.every((point) => point.isArchive)) {
+      render(this.#noPointComponent, this.#tripEventsComponent.element, RenderPosition.AFTERBEGIN);
+    }
+  }
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleTaskChange = (updatedPoint) => {
+    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #renderSort() {
+    render(this.#tripSortComponent, this.#tripEventsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderPoint(point) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-    const pointComponent = new PointView({
-      point,
-      onArrowClick: () => {
-        replaceCardToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
-    });
-    const pointEditComponent = new PointEditView({
-      point,
-      onFormSubmit: () => {
-        replaceFormToCard();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
+    const pointPresenter = new BoardPointPresenter({
+      pointListContainer: this.#tripEventsComponent.element,
+      onDataChange: this.#handleTaskChange,
+      onModeChange: this.#handleModeChange
     });
 
-    function replaceCardToForm() {
-      replace(pointEditComponent, pointComponent);
-    }
-
-    function replaceFormToCard() {
-      replace(pointComponent, pointEditComponent);
-    }
-
-    render(pointComponent, this.#tripEventsComponent.element);
-  }
-
-  #pointsRender(){
-
-    render(this.#tripSortComponent, this.#tripEventsContainer);
-    render(this.#tripEventsComponent, this.#tripEventsContainer);
-    // render(new PointEditView(this.#boardPoints[0]), this.#tripEventsComponent.element);
-
-    this.#boardPoints.forEach((point) => {
-      this.#renderPoint(point);
-    });
-
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 }

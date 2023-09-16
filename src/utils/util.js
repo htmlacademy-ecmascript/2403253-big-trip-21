@@ -152,5 +152,5 @@ export function sortTimeDown(pointA, pointB) {
 }
 
 export function sortPriseDown(pointA, pointB){
-    return pointB.cost - pointA.cost;
+  return pointB.cost - pointA.cost;
 }

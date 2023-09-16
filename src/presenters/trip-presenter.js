@@ -103,7 +103,7 @@ export default class TripEventsPresenter {
         this.#boardPoints.sort(sortTimeDown);
         break;
       case SortType.PRICE:
-        this.#boardPoints.sort(sortPriseDown)
+        this.#boardPoints.sort(sortPriseDown);
         break;
       default:
         this.#boardPoints = [...this.#sourcedBoardPoints];

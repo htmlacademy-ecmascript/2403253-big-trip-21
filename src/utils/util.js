@@ -55,6 +55,12 @@ function leadZero(time) {
   return time.toString().padStart(2, '0');
 }
 
+function getDefaultTimeDifference(endTime, startTime){
+  const start = dayjs(startTime);
+  const end = dayjs(endTime);
+  return dayjs.duration(end.diff(start));
+}
+
 export function getTimeDifference(endTime, startTime) {
   const start = dayjs(startTime);
   const end = dayjs(endTime);
@@ -115,4 +121,36 @@ export function isPointExpiringToday(dueDate) {
 
 export function updateItem(items, update){
   return items.map((item) => item.id === update.id ? update : item);
+}
+function getWeightForNullDate(dateA, dateB) {
+  if (dateA === null && dateB === null) {
+    return 0;
+  }
+
+  if (dateA === null) {
+    return 1;
+  }
+
+  if (dateB === null) {
+    return -1;
+  }
+
+  return null;
+}
+
+export function sortDateUp(pointA, pointB) {
+  const weight = getWeightForNullDate(pointA.dates.start, pointB.dates.start);
+  return weight ?? dayjs(pointA.dates.start).diff(dayjs(pointB.dates.start));
+}
+
+export function sortTimeDown(pointA, pointB) {
+  const weight = getWeightForNullDate(getDefaultTimeDifference(pointA.dates.end, pointA.dates.start),
+    getDefaultTimeDifference(pointB.dates.end, pointB.dates.start));
+
+  return weight ?? dayjs(getDefaultTimeDifference(pointB.dates.end, pointB.dates.start))
+    .diff(dayjs(getDefaultTimeDifference(pointA.dates.end, pointA.dates.start)));
+}
+
+export function sortPriseDown(pointA, pointB){
+    return pointB.cost - pointA.cost;
 }

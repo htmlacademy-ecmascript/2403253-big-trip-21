@@ -98,14 +98,11 @@ export default class TripEventsPresenter {
       [SortType.DAY]: sortDateUp,
       [SortType.TIME]: sortTimeDown,
       [SortType.PRICE]: sortPriseDown,
-      };
-      sortType in sorter ? this.#boardPoints.sort(sorter[sortType]) : this.#boardPoints = [...this.#sourcedBoardPoints];
+    };
+    this.#boardPoints = sortType in sorter ? this.#boardPoints.sort(sorter[sortType]) : [...this.#sourcedBoardPoints];
 
     this.#currentSortType = sortType;
   }
-
-
-
 
   #renderPoint(point) {
     const pointPresenter = new BoardPointPresenter({

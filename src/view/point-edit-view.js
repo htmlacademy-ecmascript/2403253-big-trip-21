@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { goodPointDate } from '../utils/util.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js'
 
 const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
 
@@ -25,10 +26,10 @@ function createEventOfferSelectorTemplate(offers) {
 }
 
 function createPointEditMarkup(point) {
-  const {dates, type, cost, offers, destination} = point;
+  const {dates, type, cost, offers, destination, isDateStart, isDateEnd} = point;
   const startDate = goodPointDate(dates.start, POINT_EDIT_DATE_FORMAT);
   const endDate = goodPointDate(dates.end, POINT_EDIT_DATE_FORMAT);
-  return `<li class="trip-events__item">
+  return (`<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -103,12 +104,13 @@ function createPointEditMarkup(point) {
         </div>
 
         <div class="event__field-group  event__field-group--time">
+        ${isDateStart ? `
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
-          &mdash;
-          <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
-        </div>
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">`
+         : '' }&mdash;
+          ${isDateEnd ? `<label class="visually-hidden" for="event-end-time-1">To</label>
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">`
+         : ''}</div>
 
         <div class="event__field-group  event__field-group--price">
           <label class="event__label" for="event-price-1">
@@ -137,16 +139,15 @@ function createPointEditMarkup(point) {
         </section>
       </section>
     </form>
-  </li>`;
+  </li>`);
 }
 
-export default class PointEditView extends AbstractView {
-  #point = null;
+export default class PointEditView extends AbstractStatefulView {
   #handleFormSubmit = null;
 
   constructor({point, onFormSubmit}){
     super();
-    this.#point = point;
+    this._setState(PointEditView.parsePointToState(point));
     this.#handleFormSubmit = onFormSubmit;
 
     this.element.querySelector('form')
@@ -154,11 +155,34 @@ export default class PointEditView extends AbstractView {
   }
 
   get template() {
-    return createPointEditMarkup(this.#point);
+    return createPointEditMarkup(this._state);
   }
 
   formSubmitHandler = (evt) =>{
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state));
   };
+  static parsePointToState(point) {
+    return {...point,
+      isDateStart: point.start !== null,
+      isDateEnd: point.endDate !==null
+    };
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+
+    if (!point.startDate) {
+      point.startDate = null;
+    }
+
+    if (!point.endDate) {
+      point.endDate = null;
+    }
+
+    delete point.isDateStart;
+    delete point.isDateEnd;
+
+    return point;
+  }
 }

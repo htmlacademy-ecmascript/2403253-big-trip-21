@@ -7,7 +7,7 @@ const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
 function getDestinationNames(destination){
 
   const destinationNames = [];
-  for(let key in destination){
+  for(const key in destination){
     destinationNames[key] = destination[key].name;
   }
   return destinationNames;

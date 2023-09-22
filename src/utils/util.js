@@ -3,6 +3,9 @@ import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
 
+export function upFirst(str){
+  return str[0].toUpperCase() + str.slice(1);
+}
 export const DESTINATION_DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
   'Cras aliquet varius magna, non porta ligula feugiat eget. ',

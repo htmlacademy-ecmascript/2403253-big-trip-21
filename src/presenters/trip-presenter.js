@@ -11,7 +11,9 @@ import { sortDateUp, sortTimeDown, sortPriseDown } from '../utils/util';
 export default class TripEventsPresenter {
   #tripEventsContainer = null;
   #pointModel = null;
-
+  #destinations = null;
+  #offers = null;
+  #pointTypes = null;
   #tripSortComponent = null;
   #tripEventsComponent = new ListView();
   #noPointComponent = new NoPointView();
@@ -23,14 +25,17 @@ export default class TripEventsPresenter {
   #currentSortType = SortType.DEFAULT;
 
 
-  constructor({ tripEventsContainer, pointModel }) {
+  constructor({ tripEventsContainer, pointModel}) {
     this.#tripEventsContainer = tripEventsContainer;
     this.#pointModel = pointModel;
+    this.#destinations = pointModel.Points.destinations;
+    this.#offers = pointModel.Points.offers;
+    this.#pointTypes = pointModel.Points.pointTypes;
   }
 
   init() {
-    this.#boardPoints = [...this.#pointModel.Points];
-    this.#sourcedBoardPoints = [...this.#pointModel.Points];
+    this.#boardPoints = [...this.#pointModel.Points.points];
+    this.#sourcedBoardPoints = [...this.#pointModel.Points.points];
     this.#boardPoints.sort(sortDateUp);
     this.#allRender();
   }
@@ -108,7 +113,10 @@ export default class TripEventsPresenter {
     const pointPresenter = new BoardPointPresenter({
       pointListContainer: this.#tripEventsComponent.element,
       onDataChange: this.#handleTaskChange,
-      onModeChange: this.#handleModeChange
+      onModeChange: this.#handleModeChange,
+      destinations: this.#destinations,
+      pointTypes: this.#pointTypes,
+      offers: this.#offers,
     });
 
     pointPresenter.init(point);

@@ -31,19 +31,31 @@ const PointTypes = {
   },
   Bus: {
     name: 'Bus',
-    icon: './img/icons/taxi.png'
+    icon: './img/icons/bus.png'
   },
   Train: {
     name: 'Train',
-    icon: './img/icons/taxi.png'
+    icon: './img/icons/train.png'
   },
   Ship: {
     name: 'Ship',
-    icon: './img/icons/taxi.png'
+    icon: './img/icons/ship.png'
   },
   Flight:{
     name: 'Flight',
     icon : './img/icons/flight.png'
+  },
+  Check_in:{
+    name: 'Check-in',
+    icon: './img/icons/check-in.png'
+  },
+  Sightseeing:{
+    name: 'Sightseeing',
+    icon: './img/icons/sightseeing.png'
+  },
+  Restaurant:{
+    name: 'Restaurant',
+    icon: './img/icons/restaurant.png'
   }
 };
 
@@ -112,6 +124,58 @@ const offers = {
       checked: getRandomBoolean()
     }
   ],
+
+  [PointTypes.Check_in.name]: [
+    {
+      name: 'Premium room',
+      cost: 130,
+      checked: getRandomBoolean()
+    },
+    {
+      name: 'Property insurance',
+      cost: 80,
+      checked: getRandomBoolean()
+    }
+  ],
+
+  [PointTypes.Sightseeing.name]: [
+    {
+      name: 'Сonduct a tour',
+      cost: 5,
+      checked: getRandomBoolean()
+    },
+    {
+      name: 'Meals',
+      cost: 30,
+      checked: getRandomBoolean()
+    }
+  ],
+
+  [PointTypes.Sightseeing.name]: [
+    {
+      name: 'Сonduct a tour',
+      cost: 5,
+      checked: getRandomBoolean()
+    },
+    {
+      name: 'Meals',
+      cost: 30,
+      checked: getRandomBoolean()
+    }
+  ],
+
+  [PointTypes.Restaurant.name]: [
+    {
+      name: 'A dish from the chef',
+      cost: 40,
+      checked: getRandomBoolean()
+    },
+    {
+      name: 'Sea view',
+      cost: 30,
+      checked: getRandomBoolean()
+    }
+  ],
 };
 
 function generateRandomWayPoint() {
@@ -132,4 +196,4 @@ function generateRandomWayPoint() {
   });
 }
 
-export {generateRandomWayPoint};
+export {generateRandomWayPoint, destinations, PointTypes, offers};

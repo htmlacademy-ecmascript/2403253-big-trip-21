@@ -10,6 +10,6 @@ export default class PointModel{
       destinations: destinations,
       pointTypes: PointTypes,
       offers: offers,
-      }
-    }
+    };
+  }
 }

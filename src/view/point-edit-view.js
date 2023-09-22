@@ -1,5 +1,5 @@
 import { goodPointDate, upFirst } from '../utils/util.js';
-import AbstractStatefulView from '../framework/view/abstract-stateful-view.js'
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const numberOnly = /^\d+$/;
 const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
@@ -7,7 +7,7 @@ const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
 function getDestinationNames(destination){
 
   const destinationNames = [];
-  for(var key in destination){
+  for(let key in destination){
     destinationNames[key] = destination[key].name;
   }
   return destinationNames;
@@ -26,7 +26,7 @@ function createPointImages(photos) {
 }
 
 function createTypeTemplate(type){
-  const name = type.name.toLowerCase()
+  const name = type.name.toLowerCase();
   return `
     <div class="event__type-item">
       <input id="event-type-${name}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${name}">
@@ -38,8 +38,8 @@ function createTypeTemplate(type){
 function createEventOfferSelectorTemplate(offers) {
 
   if(offers){
-  return offers.map((offer) =>
-    `<div class="event__offer-selector">
+    return offers.map((offer) =>
+      `<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offer.checked ? 'checked' : ''}>
     <label class="event__offer-label" for="event-offer-luggage-1">
       <span class="event__offer-title">${offer.name}</span>
@@ -47,7 +47,7 @@ function createEventOfferSelectorTemplate(offers) {
       <span class="event__offer-price">${offer.cost}</span>
     </label>
     </div>`).join('');
-  };
+  }
 }
 
 function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
@@ -143,6 +143,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
     this._restoreHandlers();
   }
+
   get template() {
     return createPointEditMarkup(this._state, this._destinations, this._pointTypes, this._allOffers);
   }
@@ -164,6 +165,7 @@ export default class PointEditView extends AbstractStatefulView {
     evt.preventDefault();
     this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state));
   };
+
   static parsePointToState(point) {
     return {...point};
   }
@@ -189,13 +191,13 @@ export default class PointEditView extends AbstractStatefulView {
   #typeChangeHandler = (evt) => {
     const upName = upFirst(evt.target.value);
     const icon = Object.values(this._pointTypes)
-      .find((type) => type.name == upName).icon;
+      .find((type) => type.name === upName).icon;
     evt.preventDefault();
     this.updateElement({
       type: {name: upName, icon: icon}
     });
-    return;
-  }
+  };
+
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
     if(evt.target.value === this._state.destination.name){
@@ -219,15 +221,15 @@ export default class PointEditView extends AbstractStatefulView {
     this.updateElement({
       destination: this._state.destination
     });
-  }
+  };
 
   #CostInputHandler = (evt) => {
     evt.preventDefault();
-    let numbers = evt.target.value.match(numberOnly);
+    const numbers = evt.target.value.match(numberOnly);
     if(evt.target.value === this._state.cost){
       return;
     }
-    if(evt.target.value <= 0  || evt.target.value != numbers){
+    if(evt.target.value <= 0 || evt.target.value !== numbers){
       this._setState({
         cost: this._state.cost
       });
@@ -242,7 +244,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.updateElement({
       cost: this._state.cost
     });
-  }
+  };
 
   #DateInputHandler = (evt) => {
     evt.preventDefault();

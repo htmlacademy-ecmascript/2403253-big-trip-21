@@ -45,7 +45,7 @@ const PointTypes = {
     name: 'Flight',
     icon : './img/icons/flight.png'
   },
-  Check_in:{
+  Checkin:{
     name: 'Check-in',
     icon: './img/icons/check-in.png'
   },
@@ -125,7 +125,7 @@ const offers = {
     }
   ],
 
-  [PointTypes.Check_in.name]: [
+  [PointTypes.Checkin.name]: [
     {
       name: 'Premium room',
       cost: 130,

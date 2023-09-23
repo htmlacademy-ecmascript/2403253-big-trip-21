@@ -1,15 +1,11 @@
-import { goodPointDate, upFirst } from '../utils/util.js';
+import { goodPointDate, capitalize } from '../utils/util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const numberOnly = /^\d+$/;
 const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
 
 function getDestinationNames(destination){
-
-  const destinationNames = [];
-  for(const key in destination){
-    destinationNames[key] = destination[key].name;
-  }
+  const destinationNames = destination.reduce((accumulator, dest) => [...accumulator, dest.name], []);
   return destinationNames;
 }
 
@@ -171,25 +167,18 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   static parseStateToPoint(state) {
-    const point = {...state};
-    if(!point.cost) {
-      point.cost = null;
-    }
-    if (!point.startDate) {
-      point.startDate = null;
-    }
+    const {cost, startDate, endDate, destination} = state
 
-    if (!point.endDate) {
-      point.endDate = null;
-    }
-    if (!point.destination){
-      point.destination = null;
-    }
-    return point;
+    return {
+    cost: cost || null,
+    startDate: startDate || null,
+    endDate: endDate || null,
+    destination : destination || null,
+    };
   }
 
   #typeChangeHandler = (evt) => {
-    const upName = upFirst(evt.target.value);
+    const upName = capitalize(evt.target.value);
     const icon = Object.values(this._pointTypes)
       .find((type) => type.name === upName).icon;
     evt.preventDefault();
@@ -205,44 +194,45 @@ export default class PointEditView extends AbstractStatefulView {
     }
 
     if(!this._destinations.find((dest) => dest.name === evt.target.value)){
-      this._setState({
-        destination: this._state.destination
-      });
       this.updateElement({
         destination: this._state.destination
       });
       return;
     }
 
-    this._setState({
-      destination: this._destinations.find((dest) => dest.name === evt.target.value)
-    });
-
     this.updateElement({
-      destination: this._state.destination
+      destination: this._destinations.find((dest) => dest.name === evt.target.value)//this._state.destination
     });
   };
 
   #CostInputHandler = (evt) => {
     evt.preventDefault();
     const numbers = evt.target.value.match(numberOnly);
-    if(evt.target.value === this._state.cost){
-      return;
-    }
-    if(evt.target.value <= 0 || evt.target.value !== numbers){
-      this._setState({
-        cost: this._state.cost
-      });
+    if(!numbers){
       this.updateElement({
         cost: this._state.cost
       });
       return;
     }
-    this._setState({
-      cost: evt.target.value,
-    });
+
+    if(evt.target.value === this._state.cost){
+      return;
+    }
+
+    if(evt.target.value <= 0 || evt.target.value !== numbers.toString()){
+      // this._setState({
+      //   cost: this._state.cost
+      // });
+      this.updateElement({
+        cost: this._state.cost
+      });
+      return;
+    }
+    // this._setState({
+    //   cost: evt.target.value,
+    // });
     this.updateElement({
-      cost: this._state.cost
+      cost: evt.target.value//this._state.cost
     });
   };
 

@@ -167,13 +167,13 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   static parseStateToPoint(state) {
-    const {cost, startDate, endDate, destination} = state
+    const {cost, startDate, endDate, destination} = state;
 
     return {
-    cost: cost || null,
-    startDate: startDate || null,
-    endDate: endDate || null,
-    destination : destination || null,
+      cost: cost || null,
+      startDate: startDate || null,
+      endDate: endDate || null,
+      destination : destination || null,
     };
   }
 
@@ -220,19 +220,14 @@ export default class PointEditView extends AbstractStatefulView {
     }
 
     if(evt.target.value <= 0 || evt.target.value !== numbers.toString()){
-      // this._setState({
-      //   cost: this._state.cost
-      // });
       this.updateElement({
         cost: this._state.cost
       });
       return;
     }
-    // this._setState({
-    //   cost: evt.target.value,
-    // });
+
     this.updateElement({
-      cost: evt.target.value//this._state.cost
+      cost: evt.target.value
     });
   };
 

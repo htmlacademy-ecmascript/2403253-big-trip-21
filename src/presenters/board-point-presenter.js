@@ -14,15 +14,21 @@ export default class BoardPointPresenter{
   #handleModeChange = null;
   #pointComponent = null;
   #pointEditComponent = null;
+  #destinations = null;
+  #pointTypes = null;
+  #offers = null;
 
   #point = null;
 
   #mode = Mode.DEFAULT;
 
-  constructor({pointListContainer, onDataChange, onModeChange}) {
+  constructor({pointListContainer, onDataChange, onModeChange, destinations, pointTypes, offers}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
+    this.#destinations = destinations;
+    this.#pointTypes = pointTypes;
+    this.#offers = offers;
   }
 
   init(point) {
@@ -41,6 +47,9 @@ export default class BoardPointPresenter{
     this.#pointEditComponent = new PointEditView({
       point: this.#point,
       onFormSubmit: this.#handleFormSubmit,
+      destinations: this.#destinations,
+      pointTypes: this.#pointTypes,
+      offers: this.#offers,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {

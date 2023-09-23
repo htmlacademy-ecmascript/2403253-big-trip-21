@@ -28,7 +28,7 @@ export default class HeaderPresenter {
   }
 
   #renderFilters(){
-    const filters = generateFilter(this.#pointModel.Points);
+    const filters = generateFilter(this.#pointModel.Points.points);
     render(new TripFilterView(filters), this.#tripFilterContainer, 'afterbegin');
 
   }

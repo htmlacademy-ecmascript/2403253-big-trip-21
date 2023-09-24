@@ -110,6 +110,10 @@ export function isPointExpired(dueDate) {
   return dueDate && dayjs().isAfter(dueDate, 'D');
 }
 
+export function isDatesEqual(dateA, dateB) {
+  return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+}
+
 export function isPointFuture(dueDate){
   return dueDate && dayjs().isBefore(dueDate, 'D');
 }
@@ -122,9 +126,6 @@ export function isPointExpiringToday(dueDate) {
   return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
 }
 
-export function updateItem(items, update){
-  return items.map((item) => item.id === update.id ? update : item);
-}
 function getWeightForNullDate(dateA, dateB) {
   if (dateA === null && dateB === null) {
     return 0;

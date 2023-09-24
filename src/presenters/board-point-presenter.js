@@ -1,7 +1,8 @@
 import PointView from '../view/point-view';
 import PointEditView from '../view/point-edit-view';
-
+import {isPointRepeating, isDatesEqual} from '../utils/util';
 import {render, replace, remove} from '../framework/render';
+import {UserAction, UpdateType} from '../utils/const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -47,6 +48,7 @@ export default class BoardPointPresenter{
     this.#pointEditComponent = new PointEditView({
       point: this.#point,
       onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
       destinations: this.#destinations,
       pointTypes: this.#pointTypes,
       offers: this.#offers,
@@ -106,14 +108,40 @@ export default class BoardPointPresenter{
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
   #handleArchiveClick = () => {
-    this.#handleDataChange({...this.#point, isArchive: !this.#point.isArchive});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isArchive: !this.#point.isArchive},
+    );
   };
 
-  #handleFormSubmit = () => {
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+      !isDatesEqual(this.#point.dates, update.dates) ||
+      isPointRepeating(this.#point.repeating) !==
+      isPointRepeating(update.repeating);
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update,
+    );
     this.#replaceFormToCard();
   };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      this.#point,
+    );
+  };
+
 }

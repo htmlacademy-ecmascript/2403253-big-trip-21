@@ -106,16 +106,16 @@ export function generateRandomDate(startYear, endYear) {
   ];
 }
 
-export function isPointExpired(dueDate) {
-  return dueDate && dayjs().isAfter(dueDate, 'D');
+export function isPointExpired(endDate) {
+  return endDate && dayjs().isAfter(endDate, 'D');
 }
 
 export function isDatesEqual(dateA, dateB) {
   return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 }
 
-export function isPointFuture(dueDate){
-  return dueDate && dayjs().isBefore(dueDate, 'D');
+export function isPointFuture(startDate){
+  return startDate && dayjs().isBefore(startDate, 'D');
 }
 
 export function isPointRepeating(repeating) {

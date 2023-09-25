@@ -5,7 +5,7 @@ import BoardPointPresenter from './board-point-presenter';
 import { POINTS_COUNT } from '../model/point-model';
 import {RenderPosition, render, remove} from '../framework/render';
 
-import { SortType, UpdateType, UserAction } from '../utils/const';
+import { SortType, UpdateType, UserAction, FilterType } from '../utils/const';
 import { sortDateUp, sortTimeDown, sortPriseDown } from '../utils/util';
 import {filter} from '../utils/filter.js';
 
@@ -18,11 +18,11 @@ export default class TripEventsPresenter {
   #pointTypes = null;
   #tripSortComponent = null;
   #tripEventsComponent = new ListView();
-  #noPointComponent = new NoPointView();
+  #noPointComponent = null;
   #renderedPointCount = POINTS_COUNT;
   #pointPresenters = new Map();
   #currentSortType = SortType.DEFAULT;
-
+  #filterType = FilterType.ALL;
 
   constructor({ tripEventsContainer, pointModel, filterModel}) {
     this.#tripEventsContainer = tripEventsContainer;
@@ -36,9 +36,10 @@ export default class TripEventsPresenter {
   }
 
   get points() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const points = this.#pointModel.Points.points; //pointModel just?
-    const filteredPoints = filter[filterType](points);
+    console.log(points)
+    const filteredPoints = filter[this.#filterType](points);
     const sorter = {
       [SortType.DAY]: sortDateUp,
       [SortType.TIME]: sortTimeDown,
@@ -55,8 +56,6 @@ export default class TripEventsPresenter {
 
   #allRender(){
     this.#renderBoardPoints();
-    this.#renderNoTasks();
-
   }
 
   #renderBoardPoints(){
@@ -79,9 +78,12 @@ export default class TripEventsPresenter {
   }
 
   #renderNoTasks() {
-    if (this.points.every((point) => point.isArchive)) {
-      render(this.#noPointComponent, this.#tripEventsComponent.element, RenderPosition.AFTERBEGIN);
-    }
+    this.#noPointComponent = new NoPointView({
+      filterType: this.#filterType
+    });
+    //if (this.points.every((point) => point.isArchive)) {
+    render(this.#noPointComponent, this.#tripEventsComponent.element, RenderPosition.AFTERBEGIN);
+    //}
   }
 
   #handleModeChange = () => {
@@ -147,13 +149,13 @@ export default class TripEventsPresenter {
 
     remove(this.#tripSortComponent);
     remove(this.#noPointComponent);
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+    }
 
     if (resetRenderedPointCount) {
       this.#renderedPointCount = POINTS_COUNT;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this.#renderedPointCount = Math.min(pointCount, this.#renderedPointCount);
     }
 

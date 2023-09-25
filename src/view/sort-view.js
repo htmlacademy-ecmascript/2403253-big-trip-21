@@ -47,7 +47,7 @@ export default class SortView extends AbstractView{
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== ('INPUT' || 'LABEL')) {
+    if (evt.target.tagName !== ('INPUT')) {
       return;
     }
     this.#handleSortTypeChange(evt.target.dataset.sortType);

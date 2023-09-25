@@ -7,10 +7,12 @@ import {RenderPosition, render, remove} from '../framework/render';
 
 import { SortType, UpdateType, UserAction } from '../utils/const';
 import { sortDateUp, sortTimeDown, sortPriseDown } from '../utils/util';
+import {filter} from '../utils/filter.js';
 
 export default class TripEventsPresenter {
   #tripEventsContainer = null;
   #pointModel = null;
+  #filterModel = null;
   #destinations = null;
   #offers = null;
   #pointTypes = null;
@@ -22,43 +24,43 @@ export default class TripEventsPresenter {
   #currentSortType = SortType.DEFAULT;
 
 
-  constructor({ tripEventsContainer, pointModel}) {
+  constructor({ tripEventsContainer, pointModel, filterModel}) {
     this.#tripEventsContainer = tripEventsContainer;
     this.#pointModel = pointModel;
+    this.#filterModel = filterModel;
     this.#destinations = pointModel.Points.destinations;
     this.#offers = pointModel.Points.offers;
     this.#pointTypes = pointModel.Points.pointTypes;
     this.#pointModel.addObserver(this.#handleModelEvent); //возможно pointModel.Points.points
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointModel.Points.points; //pointModel just?
+    const filteredPoints = filter[filterType](points);
     const sorter = {
       [SortType.DAY]: sortDateUp,
       [SortType.TIME]: sortTimeDown,
       [SortType.PRICE]: sortPriseDown,
     };
 
-  return [...this.#pointModel.Points.points] = this.#currentSortType in sorter ?
-    [...this.#pointModel.Points.points].sort(sorter[this.#currentSortType]) : this.#pointModel.Points.points;
+  return this.#currentSortType in sorter ?
+    filteredPoints.sort(sorter[this.#currentSortType]) : filteredPoints.sort(sortDateUp);
   }
 
   init() {
-    [...this.#pointModel.Points.points].sort(sortDateUp);
     this.#allRender();
   }
 
   #allRender(){
-    //this.#renderSort();
     this.#renderBoardPoints();
-
     this.#renderNoTasks();
 
   }
 
   #renderBoardPoints(){
-    //render(this.#tripEventsComponent, this.#tripEventsContainer);
     this.#renderSort();
-    //this.#renderPoints();
     const points = this.points;
     const pointsCount = points.length;
 

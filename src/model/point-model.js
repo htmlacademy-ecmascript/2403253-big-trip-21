@@ -14,9 +14,12 @@ export default class PointModel extends Observable{
     };
   }
 
+  generateNewPoint(){
+    return Array.from({length: 1}, generateRandomWayPoint);
+  }
+
   updatePoint(updateType, update) {
     const index = this.#points.findIndex((points) => points.id === update.id);
-    console.log(this.#points)
     if (index === -1) {
       throw new Error('Can\'t update unexisting task');
     }

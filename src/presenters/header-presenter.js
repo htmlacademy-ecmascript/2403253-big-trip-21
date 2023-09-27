@@ -3,7 +3,7 @@ import { render } from '../framework/render';
 
 export default class HeaderPresenter {
   #tripInfoContainer = null;
-   #tripInfoComponent = new TripInfoView();
+  #tripInfoComponent = new TripInfoView();
 
   constructor({tripInfoContainer}) {
     this.#tripInfoContainer = tripInfoContainer;

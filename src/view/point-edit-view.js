@@ -48,7 +48,7 @@ function createEventOfferSelectorTemplate(offers) {
 
 function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
   const {dates, type, cost, destination} = point;
-
+  // console.log(type.name)
   const destinationNames = getDestinationNames(destinations);
   const destionationsElements = destinationNames.map(createDestinationTemplate).join('');
   const pointTypesArray = Object.values(pointTypes);
@@ -169,17 +169,20 @@ export default class PointEditView extends AbstractStatefulView {
   #formDeleteClickHandler = (evt) =>{
     evt.preventDefault();
     this.#handleDeleteClick(PointEditView.parseStateToPoint(this._state));
-  }
+  };
+
   static parsePointToState(point) {
     return {...point};
   }
 
   static parseStateToPoint(state) {
     const point = {...state};
-    for (var key in point){
-      if(!key) key = null;
+    for (let key in point){
+      if(!key) {
+        key = null;
+      }
     }
-    return point
+    return point;
   }
 
   #typeChangeHandler = (evt) => {

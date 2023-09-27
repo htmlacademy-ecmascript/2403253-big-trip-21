@@ -136,7 +136,7 @@ export default class BoardPointPresenter{
     this.#replaceFormToCard();
   };
 
-  #handleDeleteClick = (point) => {
+  #handleDeleteClick = () => {
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,

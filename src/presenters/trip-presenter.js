@@ -4,15 +4,19 @@ import NoPointView from '../view/no-point-view';
 import BoardPointPresenter from './board-point-presenter';
 import { POINTS_COUNT } from '../model/point-model';
 import {RenderPosition, render, remove} from '../framework/render';
+import NewPointPresenter from './new-point-presenter';
+//import PointModel from '../model/point-model';
 
 import { SortType, UpdateType, UserAction, FilterType } from '../utils/const';
 import { sortDateUp, sortTimeDown, sortPriseDown } from '../utils/util';
 import {filter} from '../utils/filter.js';
 
 export default class TripEventsPresenter {
+  //#pointModelForNewPoint = new PointModel();
   #tripEventsContainer = null;
   #pointModel = null;
   #filterModel = null;
+  #newPointPresenter = null;
   #destinations = null;
   #offers = null;
   #pointTypes = null;
@@ -24,13 +28,24 @@ export default class TripEventsPresenter {
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL;
 
-  constructor({ tripEventsContainer, pointModel, filterModel}) {
+  constructor({ tripEventsContainer, pointModel, filterModel, onNewTaskDestroy}) {
     this.#tripEventsContainer = tripEventsContainer;
     this.#pointModel = pointModel;
     this.#filterModel = filterModel;
     this.#destinations = pointModel.Points.destinations;
     this.#offers = pointModel.Points.offers;
     this.#pointTypes = pointModel.Points.pointTypes;
+    this.#newPointPresenter = new NewPointPresenter({
+      pointListContainer: this.#tripEventsComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewTaskDestroy,
+      offers: this.#offers,
+      destinations: this.#destinations,
+      pointTypes: this.#pointTypes,
+
+
+    });
+
     this.#pointModel.addObserver(this.#handleModelEvent); //возможно pointModel.Points.points
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -38,7 +53,6 @@ export default class TripEventsPresenter {
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointModel.Points.points; //pointModel just?
-    console.log(points)
     const filteredPoints = filter[this.#filterType](points);
     const sorter = {
       [SortType.DAY]: sortDateUp,
@@ -46,12 +60,18 @@ export default class TripEventsPresenter {
       [SortType.PRICE]: sortPriseDown,
     };
 
-  return this.#currentSortType in sorter ?
-    filteredPoints.sort(sorter[this.#currentSortType]) : filteredPoints.sort(sortDateUp);
+    return this.#currentSortType in sorter ?
+      filteredPoints.sort(sorter[this.#currentSortType]) : filteredPoints.sort(sortDateUp);
   }
 
   init() {
     this.#allRender();
+  }
+
+  createPoint() {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+    this.#newPointPresenter.init();
   }
 
   #allRender(){
@@ -68,7 +88,7 @@ export default class TripEventsPresenter {
       return;
     }
     render(this.#tripEventsComponent, this.#tripEventsContainer);
-    this.#renderPoints(points.slice(0, Math.min(pointsCount, this.#renderedPointCount)));
+    this.#renderPoints(points); //.slice(0, Math.min(pointsCount, this.#renderedPointCount)));
   }
 
   #renderPoints(points){
@@ -87,6 +107,7 @@ export default class TripEventsPresenter {
   }
 
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -144,6 +165,7 @@ export default class TripEventsPresenter {
   #clearBoard({resetRenderedPointCount = false, resetSortType = false} = {}) {
     const pointCount = this.points.length;
 
+    this.#newPointPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 

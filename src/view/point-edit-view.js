@@ -48,7 +48,7 @@ function createEventOfferSelectorTemplate(offers) {
 
 function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
   const {dates, type, cost, destination} = point;
-
+  // console.log(type.name)
   const destinationNames = getDestinationNames(destinations);
   const destionationsElements = destinationNames.map(createDestinationTemplate).join('');
   const pointTypesArray = Object.values(pointTypes);
@@ -106,7 +106,7 @@ function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">Delete</button>
       </header>
 
       <section class="event__details">
@@ -130,13 +130,15 @@ function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
 export default class PointEditView extends AbstractStatefulView {
   destinationNow = null;
   #handleFormSubmit = null;
-  constructor({point, onFormSubmit, destinations, pointTypes, offers}){
+  #handleDeleteClick = null;
+  constructor({point, onFormSubmit, onDeleteClick, destinations, pointTypes, offers}){
     super();
     this._destinations = destinations;
     this._pointTypes = pointTypes;
     this._allOffers = offers;
     this._setState(PointEditView.parsePointToState(point));
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
     this._restoreHandlers();
   }
 
@@ -147,6 +149,8 @@ export default class PointEditView extends AbstractStatefulView {
   _restoreHandlers(){
     this.element.querySelector('form')
       .addEventListener('submit', this.formSubmitHandler);
+    this.element.querySelector('form')
+      .addEventListener('reset', this.#formDeleteClickHandler);
     this.element.querySelector('.event__input--time')
       .addEventListener('blur', this.#DateInputHandler);
     this.element.querySelector('.event__input--price')
@@ -162,19 +166,21 @@ export default class PointEditView extends AbstractStatefulView {
     this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state));
   };
 
+  #formDeleteClickHandler = (evt) =>{
+    evt.preventDefault();
+    this.#handleDeleteClick(PointEditView.parseStateToPoint(this._state));
+  };
+
   static parsePointToState(point) {
     return {...point};
   }
 
   static parseStateToPoint(state) {
-    const {cost, startDate, endDate, destination} = state;
-
-    return {
-      cost: cost || null,
-      startDate: startDate || null,
-      endDate: endDate || null,
-      destination : destination || null,
-    };
+    const point = {...state};
+    for (const key in point){
+      point[key] ??= null;
+    }
+    return point;
   }
 
   #typeChangeHandler = (evt) => {

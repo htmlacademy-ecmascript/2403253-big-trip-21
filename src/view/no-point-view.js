@@ -17,9 +17,9 @@ function createNoPointMarkup(filterType) {
   );
 }
 export default class NoPointView extends AbstractView {
-  #filterType = FilterType.ALL;
+  #filterType = null;//FilterType.ALL;
 
-  constructor(filterType) {
+  constructor({filterType}) {
     super();
 
     if(filterType){

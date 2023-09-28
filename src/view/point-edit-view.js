@@ -177,10 +177,8 @@ export default class PointEditView extends AbstractStatefulView {
 
   static parseStateToPoint(state) {
     const point = {...state};
-    for (let key in point){
-      if(!key) {
-        key = null;
-      }
+    for (const key in point){
+      point[key] ??= null;
     }
     return point;
   }

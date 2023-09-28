@@ -122,6 +122,10 @@ export function isPointRepeating(repeating) {
   return Object.values(repeating).some(Boolean);
 }
 
+export function getActiveSort(currentSortType, sortType){
+  return currentSortType === sortType ? 'trip-sortinput--active' : '';
+}
+
 export function isPointExpiringToday(dueDate) {
   return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
 }

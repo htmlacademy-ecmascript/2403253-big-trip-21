@@ -5,14 +5,12 @@ import BoardPointPresenter from './board-point-presenter';
 import { POINTS_COUNT } from '../model/point-model';
 import {RenderPosition, render, remove} from '../framework/render';
 import NewPointPresenter from './new-point-presenter';
-//import PointModel from '../model/point-model';
 
 import { SortType, UpdateType, UserAction, FilterType } from '../utils/const';
 import { sortDateUp, sortTimeDown, sortPriseDown } from '../utils/util';
 import {filter} from '../utils/filter.js';
 
 export default class TripEventsPresenter {
-  //#pointModelForNewPoint = new PointModel();
   #tripEventsContainer = null;
   #pointModel = null;
   #filterModel = null;
@@ -46,22 +44,20 @@ export default class TripEventsPresenter {
 
     });
 
-    this.#pointModel.addObserver(this.#handleModelEvent); //возможно pointModel.Points.points
+    this.#pointModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-    const points = this.#pointModel.Points.points; //pointModel just?
+    const points = this.#pointModel.Points.points;
     const filteredPoints = filter[this.#filterType](points);
     const sorter = {
       [SortType.DAY]: sortDateUp,
       [SortType.TIME]: sortTimeDown,
       [SortType.PRICE]: sortPriseDown,
     };
-
-    return this.#currentSortType in sorter ?
-      filteredPoints.sort(sorter[this.#currentSortType]) : filteredPoints.sort(sortDateUp);
+    return filteredPoints.sort(sorter[this.#currentSortType] || sortDateUp);
   }
 
   init() {
@@ -88,7 +84,7 @@ export default class TripEventsPresenter {
       return;
     }
     render(this.#tripEventsComponent, this.#tripEventsContainer);
-    this.#renderPoints(points); //.slice(0, Math.min(pointsCount, this.#renderedPointCount)));
+    this.#renderPoints(points);
   }
 
   #renderPoints(points){
@@ -101,9 +97,7 @@ export default class TripEventsPresenter {
     this.#noPointComponent = new NoPointView({
       filterType: this.#filterType
     });
-    //if (this.points.every((point) => point.isArchive)) {
     render(this.#noPointComponent, this.#tripEventsComponent.element, RenderPosition.AFTERBEGIN);
-    //}
   }
 
   #handleModeChange = () => {
@@ -147,8 +141,6 @@ export default class TripEventsPresenter {
 
     }
     this.#currentSortType = sortType;
-    // this.#clearTaskList();
-    // this.#renderBoardPoints();
     this.#clearBoard({resetRenderedTaskCount: true});
     this.#renderBoardPoints();
   };

@@ -18,8 +18,12 @@ export default class PointModel extends Observable{
     return Array.from({length: 1}, generateRandomWayPoint);
   }
 
+  getPointById(update){
+    return this.#points.findIndex((points) => points.id === update.id);
+  }
+
   updatePoint(updateType, update) {
-    const index = this.#points.findIndex((points) => points.id === update.id);
+    const index = this.getPointById(update);
     if (index === -1) {
       throw new Error('Can\'t update unexisting task');
     }
@@ -43,7 +47,7 @@ export default class PointModel extends Observable{
   }
 
   deletePoint(updateType, update) {
-    const index = this.#points.findIndex((points) => points.id === update.id);
+    const index = this.getPointById(update);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting task');
@@ -56,4 +60,5 @@ export default class PointModel extends Observable{
 
     this._notify(updateType);
   }
+
 }

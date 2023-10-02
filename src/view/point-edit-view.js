@@ -31,30 +31,32 @@ function createTypeTemplate(type){
 
 }
 
-function createEventOfferSelectorTemplate(offers) {
+function createEventOfferSelectorTemplate(offers, checkedOffers) {
 
   if(offers){
     return offers.map((offer) =>
       `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offer.checked ? 'checked' : ''}>
-    <label class="event__offer-label" for="event-offer-luggage-1">
-      <span class="event__offer-title">${offer.name}</span>
+    <input class="event__offer-checkbox  visually-hidden" id="${offer.id}" type="checkbox" name="event-offer-luggage" ${checkedOffers.find((off) => off.title === offer.title) ? 'checked' : ''}>
+    <label class="event__offer-label" for="${offer.id}">
+      <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.cost}</span>
+      <span class="event__offer-price">${offer.price}</span>
     </label>
     </div>`).join('');
   }
 }
 
 function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
-  const {dates, type, cost, destination} = point;
-  // console.log(type.name)
+  const {dates, type, offers, cost, destination} = point;
+  //console.log(allOffers)
+  //console.log(offers)
+  //console.log(offers)
   const destinationNames = getDestinationNames(destinations);
   const destionationsElements = destinationNames.map(createDestinationTemplate).join('');
   const pointTypesArray = Object.values(pointTypes);
-  const findOffersArray = allOffers[type.name];
-
-  const offersElements = createEventOfferSelectorTemplate(findOffersArray);
+  const findOffersArray = allOffers[type.name.toLowerCase()];
+  //console.log(findOffersArray)
+  const offersElements = createEventOfferSelectorTemplate(findOffersArray, offers);
   const typesElements = pointTypesArray.map(createTypeTemplate).join('');
 
   const startDate = goodPointDate(dates.start, POINT_EDIT_DATE_FORMAT);
@@ -159,6 +161,9 @@ export default class PointEditView extends AbstractStatefulView {
       .addEventListener('blur', this.#destinationInputHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__available-offers')
+      .addEventListener('change', this.#offersinputHandler);
+
   }
 
   formSubmitHandler = (evt) =>{
@@ -182,6 +187,39 @@ export default class PointEditView extends AbstractStatefulView {
     }
     return point;
   }
+
+  #offersinputHandler = (evt) => {
+    //console.log(evt.target.id)
+    let newOffers = null;
+    if(this._state.offers){ //если в массиве state есть эллементы
+
+      const matchArray = this._state.offers.find((offer) => offer.id === evt.target.id);
+
+      if(matchArray){
+        if(matchArray.id === evt.target.id){ //если уже присутствует в state - удаляем
+          newOffers = this._state.offers.filter((offer) => offer.id !== evt.target.id);
+          this.updateElement({
+            offers: newOffers
+          });
+          return;
+        }
+      }
+    }
+
+    newOffers = (this._allOffers[this._state.type.name.toLowerCase()] //если не присутствует в state
+      .find((offer) => offer.id === evt.target.id));
+    //delete newOffers.price
+    if(!this._state.offers){
+      this.updateElement({
+        offers: newOffers
+      });
+      return;
+    }
+    this.updateElement({
+      offers: [...this._state.offers, newOffers]
+    });
+
+  };
 
   #typeChangeHandler = (evt) => {
     const upName = capitalize(evt.target.value);

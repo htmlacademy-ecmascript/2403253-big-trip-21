@@ -4,25 +4,27 @@ import { goodPointDate, getTimeDifference} from '../utils/util.js';
 const POINT_DATE_FORMAT = 'MMM D';
 const POINT_TIME_FORMAT = 'HH:mm';
 
-function createPointOffersTemplate(offers) {
+function createPointOffersTemplate(offers, checkedOffers) {
+
   return offers.map((offer) =>
-    offer.checked ? (
+
+    checkedOffers.find((off) => off.title === offer.title) ? (
       `<li class="event__offer">
-          <span class="event__offer-title">${offer.name}</span>
+          <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.cost}</span>
+          <span class="event__offer-price">${offer.price}</span>
         </li>`) : ''
   ).join('');
 }
 
-function createPointMarkup(point) {
+function createPointMarkup(point, allOffers) {
 
-  const {dates, type, cost, offers, destination, isFavorite} = point;
-
+  const {dates, type, offers, cost, destination, isFavorite} = point;
   const date = goodPointDate(dates.start, POINT_DATE_FORMAT);
   const dateFirstTime = goodPointDate(dates.start, POINT_TIME_FORMAT);
   const dateSecondTime = goodPointDate(dates.end, POINT_TIME_FORMAT);
   const timeDifference = getTimeDifference(dates.end, dates.start);
+  const findOffersArray = allOffers[type.name.toLowerCase()];
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -30,7 +32,7 @@ function createPointMarkup(point) {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="${type.icon}" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type.name}${destination.name}</h3>
+      <h3 class="event__title">${type.name} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="2019-03-18T10:30">${dateFirstTime}</time>
@@ -44,7 +46,7 @@ function createPointMarkup(point) {
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-      ${createPointOffersTemplate(offers)}
+      ${createPointOffersTemplate(findOffersArray, offers)}
       </ul>
       <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
@@ -61,14 +63,18 @@ function createPointMarkup(point) {
 
 export default class PointView extends AbstractView {
   #point = null;
+  #destinations = null;
+  #offers = null;
   #handleArrowClick = null;
   #handleFavoriteClick = null;
   #handleArchiveClick = null;
 
-  constructor({point, onArrowClick, onFavoriteClick, onArchiveClick}){
+  constructor({point, onArrowClick, onFavoriteClick, onArchiveClick, destinations, offers}){
     super();
 
+    this.#offers = offers;
     this.#point = point;
+    this.#destinations = destinations;
     this.#handleArrowClick = onArrowClick;
     this.#handleFavoriteClick = onFavoriteClick;
     this.#handleArchiveClick = onArchiveClick;
@@ -82,7 +88,7 @@ export default class PointView extends AbstractView {
   }
 
   get template() {
-    return createPointMarkup(this.#point);
+    return createPointMarkup(this.#point, this.#offers);
   }
 
   #arrowClickHandler = (evt) => {

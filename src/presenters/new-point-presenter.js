@@ -1,11 +1,9 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import PointEditView from '../view/point-edit-view.js';
-import {nanoid} from 'nanoid';
 import {UserAction, UpdateType} from '../utils/const.js';
-//import PointModel from '../model/point-model.js';
 
 export default class NewPointPresenter {
-  //#pointModel = new PointModel();
+  #newPoint = null;
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
@@ -14,9 +12,9 @@ export default class NewPointPresenter {
   #destinations = null;
   #pointTypes = null;
 
-  constructor({pointListContainer, onDataChange, onDestroy, offers, destinations, pointTypes}) {
-
-    //this.pointModel = pointModel;
+  constructor({pointListContainer, onDataChange, onDestroy, offers, destinations, pointTypes, newPoint}) {
+    //console.log(newPoint)
+    this.#newPoint = newPoint;
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
@@ -31,7 +29,7 @@ export default class NewPointPresenter {
       return;
     }
     this.#pointEditComponent = new PointEditView({
-      //point: newPoint[0],
+      point: this.#newPoint, //this.#pointModel.newPoint,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
       destinations: this.#destinations,
@@ -57,15 +55,30 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
-      {id: nanoid(), ...point},
+      point,
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

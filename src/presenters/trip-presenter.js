@@ -15,6 +15,7 @@ export default class TripEventsPresenter {
   #pointModel = null;
   #filterModel = null;
   #newPointPresenter = null;
+  #onNewTaskDestroy = null;
   #destinations = null;
   #offers = null;
   #pointTypes = null;
@@ -31,19 +32,11 @@ export default class TripEventsPresenter {
     this.#tripEventsContainer = tripEventsContainer;
     this.#pointModel = pointModel;
     this.#filterModel = filterModel;
-    //this.#destinations = pointModel.Points.destinations;
-    //this.#offers = pointModel.Points.offers;
-    this.#pointTypes = pointModel.Points.pointTypes;
-    this.#newPointPresenter = new NewPointPresenter({
-      pointListContainer: this.#tripEventsComponent.element,
-      onDataChange: this.#handleViewAction,
-      onDestroy: onNewTaskDestroy,
-      offers: this.#offers,
-      destinations: this.#destinations,
-      pointTypes: this.#pointTypes,
+    this.#destinations = pointModel.points.destinations;
+    this.#offers = pointModel.points.offers;
+    this.#pointTypes = pointModel.points.pointTypes;
+    this.#onNewTaskDestroy = onNewTaskDestroy;
 
-
-    });
 
     this.#pointModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -51,7 +44,7 @@ export default class TripEventsPresenter {
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-    const points = this.#pointModel.Points.points;
+    const points = this.#pointModel.points.points;
     const filteredPoints = filter[this.#filterType](points);
     const sorter = {
       [SortType.DAY]: sortDateUp,
@@ -62,11 +55,13 @@ export default class TripEventsPresenter {
   }
 
   get destinations(){
-    return this.#pointModel.Points.destinations;
+    return this.#pointModel.points.destinations;
   }
-
+  get newPoint(){
+    return this.#pointModel.newPoint;
+  }
   get offers(){
-    return this.#pointModel.Points.offers;
+    return this.#pointModel.points.offers;
   }
 
   init() {
@@ -99,7 +94,18 @@ export default class TripEventsPresenter {
       this.#renderNoTasks();
       return;
     }
+    this.#newPointPresenter = new NewPointPresenter({
+      pointListContainer: this.#tripEventsComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#onNewTaskDestroy,
+      offers: this.offers,
+      destinations: this.destinations,
+      pointTypes: this.#pointTypes,
+      newPoint: this.newPoint,
+    });
     render(this.#tripEventsComponent, this.#tripEventsContainer);
+
+
     this.#renderPoints(points, destinations, offers);
   }
 
@@ -125,16 +131,31 @@ export default class TripEventsPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointModel.updatePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setSaving();
+        try {
+          await this.#pointModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#pointModel.addPoint(updateType, update);
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#pointModel.addPoint(updateType, update);
+        } catch(err) {
+          this.#newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#pointModel.deletePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setDeleting();
+        try {
+          await this.#pointModel.deletePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
     }
   };

@@ -57,9 +57,11 @@ export default class TripEventsPresenter {
   get destinations(){
     return this.#pointModel.points.destinations;
   }
+
   get newPoint(){
     return this.#pointModel.newPoint;
   }
+
   get offers(){
     return this.#pointModel.points.offers;
   }

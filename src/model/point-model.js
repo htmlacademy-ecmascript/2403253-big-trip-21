@@ -62,6 +62,7 @@ export default class PointModel extends Observable{
       offers: this.#offers,
     };
   }
+
   get newPoint(){
     return this.#newPoint;
   }
@@ -72,8 +73,8 @@ export default class PointModel extends Observable{
       this.#destinations = await this.#getServerDestinations();
       this.#offers = await this.#getServerOffers();
       this.#points = points.map(this.#adaptToClient.bind(this));
-      this.#newPoint = this.#adaptToClient(points[0])// .map(this.#adaptToClient.bind(this));
-      delete this.#newPoint.id
+      this.#newPoint = this.#adaptToClient(points[0]);
+      delete this.#newPoint.id;
 
     } catch(err) {
       this.#points = [];
@@ -134,10 +135,9 @@ export default class PointModel extends Observable{
     try {
       const response = await this.#pointsApiService.addPoint(update);
       const newPoint = this.#adaptToClient(response);
-      this.#points = [newPoint, ...this.#points];  //возможно через get Points нужно
+      this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
     } catch(err) {
-      console.log(err)
       throw new Error('Can\'t add point');
     }
   }

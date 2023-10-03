@@ -23,18 +23,17 @@ export default class BoardPointPresenter{
 
   #mode = Mode.DEFAULT;
 
-  constructor({pointListContainer, onDataChange, onModeChange, destinations, pointTypes, offers}) {
+  constructor({pointListContainer, onDataChange, onModeChange, pointTypes}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
-    this.#destinations = destinations;
     this.#pointTypes = pointTypes;
-    this.#offers = offers;
   }
 
-  init(point) {
+  init(point, destinations, offers) {
     this.#point = point;
-
+    this.#destinations = destinations;
+    this.#offers = offers;
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
@@ -42,7 +41,9 @@ export default class BoardPointPresenter{
       point: this.#point,
       onArrowClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
-      onArchiveClick: this.#handleArchiveClick
+      onArchiveClick: this.#handleArchiveClick,
+      destinations: this.#destinations,
+      offers: this.#offers,
     });
 
     this.#pointEditComponent = new PointEditView({

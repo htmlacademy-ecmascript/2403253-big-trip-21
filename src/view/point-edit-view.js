@@ -290,38 +290,37 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #setDatepicker() {
-      this.#datepickerStart = flatpickr(
-        this.element.querySelectorAll('.event__input--time')[0],
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          defaultDate: this._state.dates.start,
-          onChange: this.#dateInputHandler,
-        },
-      );
+    this.#datepickerStart = flatpickr(
+      this.element.querySelectorAll('.event__input--time')[0],
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dates.start,
+        onChange: this.#dateInputHandler,
+      },
+    );
 
-      this.#datepickerEnd = flatpickr(
-        this.element.querySelectorAll('.event__input--time')[1],
-        {
-          enableTime: true,
-          dateFormat: 'd/m/y H:i',
-          defaultDate: this._state.dates.end,
-          onChange: this.#dateInputHandler,
-        },
-      );
-
+    this.#datepickerEnd = flatpickr(
+      this.element.querySelectorAll('.event__input--time')[1],
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dates.end,
+        onChange: this.#dateInputHandler,
+      },
+    );
   }
 
   #dateInputHandler = (evt, day, isStartDate) => {
-    if(isStartDate.config.defaultDate == this._state.dates.start){
+    if(isStartDate.config.defaultDate === this._state.dates.start){
       this.updateElement({
         dates: {start: evt[0], end: this._state.dates.end}
-      })
-    }
-    else{
+      });
+
+    } else{
       this.updateElement({
         dates: {start: this._state.dates.start, end: evt[0]}
-      })
+      });
     }
   };
 }

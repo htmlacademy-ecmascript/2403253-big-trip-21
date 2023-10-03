@@ -68,7 +68,6 @@ export default class PointModel extends Observable{
       this.#destinations = await this.#getServerDestinations();
       this.#offers = await this.#getServerOffers();
       this.#points = points.map(this.#adaptToClient.bind(this));
-      //console.log(this.#offers)
     } catch(err) {
       this.#points = [];
     }
@@ -77,10 +76,9 @@ export default class PointModel extends Observable{
 
   async #getServerDestinations(){
     const serverDestinations = await this.#pointsApiService.destinations;
-    const destinationsPictures = serverDestinations.map((obj) => obj.pictures.map((pic) => pic.src));
-    const destinations = serverDestinations.map((obj, index) => ({
+    const destinations = serverDestinations.map((obj) => ({
       ...obj,
-      photos: destinationsPictures[index]
+      photos: obj.pictures.map((pic) => pic.src)
     }));
     for (const obj of destinations) {
       delete obj.pictures;
@@ -150,7 +148,6 @@ export default class PointModel extends Observable{
   }
 
   getClientType(point){
-    //const point = point
     return PointTypes.map((obj) => obj === point.type);
   }
 

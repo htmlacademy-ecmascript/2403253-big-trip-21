@@ -48,14 +48,12 @@ function createEventOfferSelectorTemplate(offers, checkedOffers) {
 
 function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
   const {dates, type, offers, cost, destination} = point;
-  //console.log(allOffers)
-  //console.log(offers)
-  //console.log(offers)
+
   const destinationNames = getDestinationNames(destinations);
   const destionationsElements = destinationNames.map(createDestinationTemplate).join('');
   const pointTypesArray = Object.values(pointTypes);
   const findOffersArray = allOffers[type.name.toLowerCase()];
-  //console.log(findOffersArray)
+
   const offersElements = createEventOfferSelectorTemplate(findOffersArray, offers);
   const typesElements = pointTypesArray.map(createTypeTemplate).join('');
 
@@ -189,15 +187,15 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   #offersinputHandler = (evt) => {
-    //console.log(evt.target.id)
     let newOffers = null;
+    const id = evt.target.id;
     if(this._state.offers){ //если в массиве state есть эллементы
 
-      const matchArray = this._state.offers.find((offer) => offer.id === evt.target.id);
+      const matchArray = this._state.offers.find((offer) => offer.id === id);
 
       if(matchArray){
-        if(matchArray.id === evt.target.id){ //если уже присутствует в state - удаляем
-          newOffers = this._state.offers.filter((offer) => offer.id !== evt.target.id);
+        if(matchArray.id === id){ //если уже присутствует в state - удаляем
+          newOffers = this._state.offers.filter((offer) => offer.id !== id);
           this.updateElement({
             offers: newOffers
           });
@@ -207,18 +205,9 @@ export default class PointEditView extends AbstractStatefulView {
     }
 
     newOffers = (this._allOffers[this._state.type.name.toLowerCase()] //если не присутствует в state
-      .find((offer) => offer.id === evt.target.id));
-    //delete newOffers.price
-    if(!this._state.offers){
-      this.updateElement({
-        offers: newOffers
-      });
-      return;
-    }
-    this.updateElement({
-      offers: [...this._state.offers, newOffers]
-    });
+      .find((offer) => offer.id === id));
 
+    this.updateElement({ offers: this._state.offers ? [...this._state.offers, newOffers] : newOffers });
   };
 
   #typeChangeHandler = (evt) => {

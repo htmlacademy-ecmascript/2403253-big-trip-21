@@ -1,5 +1,9 @@
 import { goodPointDate, capitalize } from '../utils/util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
+
 
 const numberOnly = /^\d+$/;
 const POINT_EDIT_DATE_FORMAT = 'DD/MM/YY HH:mm';
@@ -129,6 +133,8 @@ function createPointEditMarkup(point, destinations, pointTypes, allOffers) {
 
 export default class PointEditView extends AbstractStatefulView {
   destinationNow = null;
+  #datepickerStart = null;
+  #datepickerEnd = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
   constructor({point, onFormSubmit, onDeleteClick, destinations, pointTypes, offers}){
@@ -151,23 +157,34 @@ export default class PointEditView extends AbstractStatefulView {
       .addEventListener('submit', this.formSubmitHandler);
     this.element.querySelector('form')
       .addEventListener('reset', this.#formDeleteClickHandler);
-    this.element.querySelector('.event__input--time')
-      .addEventListener('blur', this.#DateInputHandler);
     this.element.querySelector('.event__input--price')
-      .addEventListener('blur', this.#CostInputHandler);
+      .addEventListener('blur', this.#costInputHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('blur', this.#destinationInputHandler);
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__available-offers')
       .addEventListener('change', this.#offersinputHandler);
-
+    this.#setDatepicker();
   }
 
   formSubmitHandler = (evt) =>{
     evt.preventDefault();
     this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state));
   };
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+    if(this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
+  }
 
   #formDeleteClickHandler = (evt) =>{
     evt.preventDefault();
@@ -246,7 +263,7 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
-  #CostInputHandler = (evt) => {
+  #costInputHandler = (evt) => {
     evt.preventDefault();
     const numbers = evt.target.value.match(numberOnly);
     if(!numbers){
@@ -272,58 +289,38 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
-  #DateInputHandler = (evt) => {
-    evt.preventDefault();
-    // let trueDate = dayjs(evt.target.value);
-    // trueDate = goodPointDate(evt.target.value, STRING_DATE_FORMAT);
-    // //console.log(this._state.dates)
+  #setDatepicker() {
+    this.#datepickerStart = flatpickr(
+      this.element.querySelectorAll('.event__input--time')[0],
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dates.start,
+        onChange: this.#dateInputHandler,
+      },
+    );
 
+    this.#datepickerEnd = flatpickr(
+      this.element.querySelectorAll('.event__input--time')[1],
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dates.end,
+        onChange: this.#dateInputHandler,
+      },
+    );
+  }
 
-    // if(evt.target.id == 'event-start-time-1' && trueDate){
-    //   console.log('первая дата подходит под условие')
-    //   console.log(`дата превента: ${evt.target.value}`)
-    //   this.updateElement({
-    //     dates: {start: trueDate, end: this._state.dates.end}
-    //   })
-    //   this.updateElement({
-    //     dates: {start: trueDate, end: this._state.dates.end}
-    //   })
-    //   console.log(`truDate: ${trueDate}`)
-    //   console.log(goodPointDate(this._state.dates.start, POINT_EDIT_DATE_FORMAT))
-    //   // this.updateElement({
-    //   //   dates: {start: goodPointDate(this._state.dates.start, POINT_EDIT_DATE_FORMAT), end: this._state.dates.end}
-    //   // });
-    //   console.log(this._state.dates)
-    //   return;
-    // }
-    // else if(evt.target.id == 'event-end-time-1' && evt.target.value){
-    //   console.log('вторая дата подходит под условие')
-    //   this._setState({
-    //     dates: {start: this._state.dates.start, end: trueDate}
-    //   })
-    //   this.updateElement({
-    //     dates: {start: this._state.dates.start, end: this._state.dates.end}
-    //   });
-    //   console.log(this._state.dates)
-    //   return;
-    // }
-    // else {
-    //   console.log('даты не подходят под условие')
-    //   this._setState({
-    //   dates: {start: this._state.dates.start, end: this._state.dates.end}
-    //   });
-    //   this.updateElement({
-    //     dates: {start: this._state.dates.start, end: this._state.dates.end}
-    //   });
-    //   console.log(this._state.dates)
-    //   return;
+  #dateInputHandler = (evt, day, isStartDate) => {
+    if(isStartDate.config.defaultDate === this._state.dates.start){
+      this.updateElement({
+        dates: {start: evt[0], end: this._state.dates.end}
+      });
 
-    // }
-
-    // evt.preventDefault();
-    // this.updateElement({
-    //   dates: {start: this._state.dates.start, end: this._state.dates.end}
-    // });
-
+    } else{
+      this.updateElement({
+        dates: {start: this._state.dates.start, end: evt[0]}
+      });
+    }
   };
 }
